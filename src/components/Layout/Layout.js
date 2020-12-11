@@ -7,7 +7,7 @@ export default function Layout(props) {
 		// Auxiliary wraping components
 		<>
 			<div>Toolbar, SideDrawer, Backdrop</div>
-			<main className="Content">{props.children}</main>
+			<main className="content">{props.children}</main>
 		</>
 	);
 }
