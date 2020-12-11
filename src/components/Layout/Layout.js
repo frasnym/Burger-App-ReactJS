@@ -1,11 +1,13 @@
 import React from "react";
 
+import "./Layout.css";
+
 export default function Layout(props) {
 	return (
 		// Auxiliary wraping components
 		<>
 			<div>Toolbar, SideDrawer, Backdrop</div>
-			<main>{props.children}</main>
+			<main className="Content">{props.children}</main>
 		</>
 	);
 }
