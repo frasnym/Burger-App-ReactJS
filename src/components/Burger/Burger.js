@@ -5,9 +5,9 @@ import BurgerIngredient from "./BurgerIngredient/BurgerIngredient";
 import "./Burger.css";
 
 export default function Burger(props) {
-	let transformedIngredients = Object.keys(props.ingredient)
+	let transformedIngredients = Object.keys(props.ingredients)
 		.map((igKey) => {
-			return [...Array(props.ingredient[igKey])].map((_, i) => {
+			return [...Array(props.ingredients[igKey])].map((_, i) => {
 				return <BurgerIngredient key={igKey + i} type={igKey} />;
 			}); // [,]
 		})

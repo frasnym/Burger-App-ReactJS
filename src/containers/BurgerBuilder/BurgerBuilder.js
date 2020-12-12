@@ -12,7 +12,7 @@ const INGREDIENT_PRICES = {
 
 export default class BurgerBuilder extends Component {
 	state = {
-		ingredient: {
+		ingredients: {
 			salad: 0,
 			bacon: 0,
 			cheese: 0,
@@ -23,10 +23,10 @@ export default class BurgerBuilder extends Component {
 
 	addIngredientHandler = (type) => {
 		//* Updating current type count
-		const oldCount = this.state.ingredient[type]; // get current count of selected type
+		const oldCount = this.state.ingredients[type]; // get current count of selected type
 		const updatedCount = oldCount + 1; // +1 on selected type
 		const updatedIngredients = {
-			...this.state.ingredient, // transform to array
+			...this.state.ingredients, // copy the objects by spreading each object
 		};
 		updatedIngredients[type] = updatedCount;
 
@@ -36,16 +36,52 @@ export default class BurgerBuilder extends Component {
 		const newPrice = oldPrice + priceAddition;
 
 		//* Update state
-		this.setState({ totalPrice: newPrice, ingredient: updatedIngredients });
+		this.setState({
+			totalPrice: newPrice,
+			ingredients: updatedIngredients,
+		});
 	};
 
-	removeIngredientHandler = (type) => {};
+	removeIngredientHandler = (type) => {
+		//* Updating current type count
+		const oldCount = this.state.ingredients[type]; // get current count of selected type
+		if (oldCount <= 0) {
+			// Prevent negative number
+			return;
+		}
+		const updatedCount = oldCount - 1; // -1 on selected type
+		const updatedIngredients = {
+			...this.state.ingredients, // copy the objects by spreading each object
+		};
+		updatedIngredients[type] = updatedCount;
+
+		//* Updating total price
+		const priceDeduction = INGREDIENT_PRICES[type];
+		const oldPrice = this.state.totalPrice;
+		const newPrice = oldPrice - priceDeduction;
+
+		//* Update state
+		this.setState({
+			totalPrice: newPrice,
+			ingredients: updatedIngredients,
+		});
+	};
 
 	render() {
+		const disabledInfo = {
+			...this.state.ingredients,
+		};
+		for (const key in disabledInfo) {
+			disabledInfo[key] = disabledInfo[key] <= 0;
+		}
 		return (
 			<>
-				<Burger ingredient={this.state.ingredient} />
-				<BuildControls ingredientAdded={this.addIngredientHandler} />
+				<Burger ingredients={this.state.ingredients} />
+				<BuildControls
+					ingredientAdded={this.addIngredientHandler}
+					ingredientRemoved={this.removeIngredientHandler}
+					disabled={disabledInfo}
+				/>
 			</>
 		);
 	}
