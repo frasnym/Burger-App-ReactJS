@@ -8,7 +8,9 @@ import "./SideDrawer.css";
 export default function SideDrawer() {
 	return (
 		<div className="SideDrawer">
-			<Logo />
+			<div className="LogoSideDrawer">
+				<Logo />
+			</div>
 			<nav>
 				<NavigationItems />
 			</nav>

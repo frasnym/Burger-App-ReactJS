@@ -8,7 +8,9 @@ export default function Toolbar(props) {
 	return (
 		<header className="Toolbar">
 			<div>MENU</div>
-			<Logo />
+			<div className="LogoToolbar">
+				<Logo />
+			</div>
 			<NavigationItems />
 		</header>
 	);
