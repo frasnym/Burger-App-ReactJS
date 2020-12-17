@@ -5,6 +5,7 @@ import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import axios from "../../utils/axios-orders";
+import Spinner from "../../components/UI/Spinner/Spinner";
 
 const INGREDIENT_PRICES = {
 	salad: 0.5,
@@ -24,6 +25,7 @@ export default class BurgerBuilder extends Component {
 		totalPrice: 4,
 		purchasable: false,
 		purchasing: false,
+		loading: false,
 	};
 
 	updatePurchaseState(ingredients) {
@@ -98,7 +100,8 @@ export default class BurgerBuilder extends Component {
 	};
 
 	purchaseContinueHandler = () => {
-		// alert("continue");
+		this.setState({ loading: true });
+
 		const data = {
 			ingredients: this.state.ingredients,
 			price: this.state.totalPrice,
@@ -116,9 +119,13 @@ export default class BurgerBuilder extends Component {
 		axios
 			.post("/orders.json", data)
 			.then((res) => {
+				this.setState({ loading: false, purchasing: false });
 				console.log(res);
 			})
-			.catch((e) => console.log(e));
+			.catch((e) => {
+				this.setState({ loading: false, purchasing: false });
+				console.log(e);
+			});
 	};
 
 	render() {
@@ -127,6 +134,17 @@ export default class BurgerBuilder extends Component {
 		};
 		for (const key in disabledInfo) {
 			disabledInfo[key] = disabledInfo[key] <= 0;
+		}
+		let orderSummary = (
+			<OrderSummary
+				ingredients={this.state.ingredients}
+				purchaseCancelled={this.purchaseCancelHandler}
+				purchaseCuntinued={this.purchaseContinueHandler}
+				price={this.state.totalPrice}
+			/>
+		);
+		if (this.state.loading) {
+			orderSummary = <Spinner />;
 		}
 		return (
 			<>
@@ -143,12 +161,7 @@ export default class BurgerBuilder extends Component {
 					show={this.state.purchasing}
 					modalClose={this.purchaseCancelHandler}
 				>
-					<OrderSummary
-						ingredients={this.state.ingredients}
-						purchaseCancelled={this.purchaseCancelHandler}
-						purchaseCuntinued={this.purchaseContinueHandler}
-						price={this.state.totalPrice}
-					/>
+					{orderSummary}
 				</Modal>
 			</>
 		);
