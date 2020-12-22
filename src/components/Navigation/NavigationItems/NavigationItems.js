@@ -6,10 +6,8 @@ import "./NavigationItems.css";
 export default function NavigationItems() {
 	return (
 		<ul className="NavigationItems">
-			<NavigationItem link="/" active>
-				Burget Builder
-			</NavigationItem>
-			<NavigationItem link="/">Checkout</NavigationItem>
+			<NavigationItem link="/">Burget Builder</NavigationItem>
+			<NavigationItem link="/orders">Orders</NavigationItem>
 		</ul>
 	);
 }
