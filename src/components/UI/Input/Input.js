@@ -12,6 +12,7 @@ export default function Input(props) {
 					className="InputElement"
 					{...props.elementConfig}
 					value={props.value}
+					onChange={props.changed}
 				/>
 			);
 			break;
@@ -22,12 +23,17 @@ export default function Input(props) {
 					className="InputElement"
 					{...props.elementConfig}
 					value={props.value}
+					onChange={props.changed}
 				/>
 			);
 			break;
 		case "select":
 			inputElement = (
-				<select className="InputElement" value={props.value}>
+				<select
+					className="InputElement"
+					value={props.value}
+					onChange={props.changed}
+				>
 					{props.elementConfig.options.map((option) => {
 						return (
 							<option key={option.value} value={option.value}>
