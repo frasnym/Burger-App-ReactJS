@@ -6,7 +6,7 @@ export default function Input(props) {
 	let inputElement = null;
 	const inputClasses = ["InputElement"];
 
-	if (props.invalid && props.shouldValidate) {
+	if (props.invalid && props.shouldValidate && props.touched) {
 		inputClasses.push("Invalid");
 	}
 
