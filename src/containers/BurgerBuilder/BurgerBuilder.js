@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
@@ -7,6 +8,7 @@ import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import axios from "../../utils/axios-orders";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandler from "../../components/HOC/withErrorHandler/withErrorHandler";
+import * as actionTypes from "../../store/actions";
 
 const INGREDIENT_PRICES = {
 	salad: 0.5,
@@ -17,7 +19,6 @@ const INGREDIENT_PRICES = {
 
 class BurgerBuilder extends Component {
 	state = {
-		ingredients: null,
 		totalPrice: 4,
 		purchasable: false,
 		purchasing: false,
@@ -38,7 +39,7 @@ class BurgerBuilder extends Component {
 
 	updatePurchaseState(ingredients) {
 		// const ingredients = {
-		// 	...this.state.ingredients, // Copy object
+		// 	...this.props.ings, // Copy object
 		// };
 		const sum = Object.keys(ingredients)
 			.map((igKey) => {
@@ -53,10 +54,10 @@ class BurgerBuilder extends Component {
 
 	addIngredientHandler = (type) => {
 		//* Updating current type count
-		const oldCount = this.state.ingredients[type]; // get current count of selected type
+		const oldCount = this.props.ings[type]; // get current count of selected type
 		const updatedCount = oldCount + 1; // +1 on selected type
 		const updatedIngredients = {
-			...this.state.ingredients, // copy the objects by spreading each object
+			...this.props.ings, // copy the objects by spreading each object
 		};
 		updatedIngredients[type] = updatedCount;
 
@@ -75,14 +76,14 @@ class BurgerBuilder extends Component {
 
 	removeIngredientHandler = (type) => {
 		//* Updating current type count
-		const oldCount = this.state.ingredients[type]; // get current count of selected type
+		const oldCount = this.props.ings[type]; // get current count of selected type
 		if (oldCount <= 0) {
 			// Prevent negative number
 			return;
 		}
 		const updatedCount = oldCount - 1; // -1 on selected type
 		const updatedIngredients = {
-			...this.state.ingredients, // copy the objects by spreading each object
+			...this.props.ings, // copy the objects by spreading each object
 		};
 		updatedIngredients[type] = updatedCount;
 
@@ -109,12 +110,12 @@ class BurgerBuilder extends Component {
 
 	purchaseContinueHandler = () => {
 		const queryParams = [];
-		for (const i in this.state.ingredients) {
-			if (Object.hasOwnProperty.call(this.state.ingredients, i)) {
+		for (const i in this.props.ings) {
+			if (Object.hasOwnProperty.call(this.props.ings, i)) {
 				queryParams.push(
 					encodeURIComponent(i) +
 						"=" +
-						encodeURIComponent(this.state.ingredients[i])
+						encodeURIComponent(this.props.ings[i])
 				);
 			}
 		}
@@ -128,7 +129,7 @@ class BurgerBuilder extends Component {
 
 	render() {
 		const disabledInfo = {
-			...this.state.ingredients,
+			...this.props.ings,
 		};
 		for (const key in disabledInfo) {
 			disabledInfo[key] = disabledInfo[key] <= 0;
@@ -141,13 +142,13 @@ class BurgerBuilder extends Component {
 		);
 		let orderSummary = null;
 
-		if (this.state.ingredients) {
+		if (this.props.ings) {
 			burger = (
 				<>
-					<Burger ingredients={this.state.ingredients} />
+					<Burger ingredients={this.props.ings} />
 					<BuildControls
-						ingredientAdded={this.addIngredientHandler}
-						ingredientRemoved={this.removeIngredientHandler}
+						ingredientAdded={this.props.onIngredientAdded}
+						ingredientRemoved={this.props.onIngredientRemoved}
 						disabled={disabledInfo}
 						purchasable={this.state.purchasable}
 						price={this.state.totalPrice}
@@ -157,7 +158,7 @@ class BurgerBuilder extends Component {
 			);
 			orderSummary = (
 				<OrderSummary
-					ingredients={this.state.ingredients}
+					ingredients={this.props.ings}
 					purchaseCancelled={this.purchaseCancelHandler}
 					purchaseCuntinued={this.purchaseContinueHandler}
 					price={this.state.totalPrice}
@@ -183,4 +184,28 @@ class BurgerBuilder extends Component {
 	}
 }
 
-export default withErrorHandler(BurgerBuilder, axios);
+const mapStateToProps = (state) => {
+	return {
+		ings: state.ingredients,
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onIngredientAdded: (ingredientName) =>
+			dispatch({
+				type: actionTypes.ADD_INGREDIENT,
+				ingredientName: ingredientName,
+			}),
+		onIngredientRemoved: (ingredientName) =>
+			dispatch({
+				type: actionTypes.REMOVE_INGREDIENT,
+				ingredientName: ingredientName,
+			}),
+	};
+};
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(withErrorHandler(BurgerBuilder, axios));
