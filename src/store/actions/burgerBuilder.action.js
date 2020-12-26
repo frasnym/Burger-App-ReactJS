@@ -1,4 +1,5 @@
 import * as actionTypes from "./actionTypes";
+import axios from "../../utils/axios-orders";
 
 export const addIngredient = (ingredientName) => {
 	return {
@@ -11,5 +12,27 @@ export const removeIngredient = (ingredientName) => {
 	return {
 		type: actionTypes.REMOVE_INGREDIENT,
 		ingredientName,
+	};
+};
+
+export const initIngredients = () => {
+	return (dispatch) => {
+		dispatch({
+			type: actionTypes.FETCH_INGREDIENTS_REQUEST,
+		});
+
+		axios
+			.get("/ingredients.json")
+			.then((res) => {
+				dispatch({
+					type: actionTypes.FETCH_INGREDIENTS_SUCCESS,
+					ingredients: res.data,
+				});
+			})
+			.catch((err) => {
+				dispatch({
+					type: actionTypes.FETCH_INGREDIENTS_FAILURE,
+				});
+			});
 	};
 };
