@@ -7,11 +7,14 @@ export default function NavigationItems(props) {
 	return (
 		<ul className="NavigationItems">
 			<NavigationItem link="/">Burget Builder</NavigationItem>
-			<NavigationItem link="/orders">Orders</NavigationItem>
+
 			{!props.isAuthenticated ? (
 				<NavigationItem link="/auth">Authenticate</NavigationItem>
 			) : (
-				<NavigationItem link="/signout">SignOut</NavigationItem>
+				<>
+					<NavigationItem link="/orders">Orders</NavigationItem>
+					<NavigationItem link="/signout">SignOut</NavigationItem>
+				</>
 			)}
 		</ul>
 	);
