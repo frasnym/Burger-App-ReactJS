@@ -3,12 +3,16 @@ import NavigationItem from "./NavigationItem/NavigationItem";
 
 import "./NavigationItems.css";
 
-export default function NavigationItems() {
+export default function NavigationItems(props) {
 	return (
 		<ul className="NavigationItems">
 			<NavigationItem link="/">Burget Builder</NavigationItem>
 			<NavigationItem link="/orders">Orders</NavigationItem>
-			<NavigationItem link="/auth">Authenticate</NavigationItem>
+			{!props.isAuthenticated ? (
+				<NavigationItem link="/auth">Authenticate</NavigationItem>
+			) : (
+				<NavigationItem link="/signout">SignOut</NavigationItem>
+			)}
 		</ul>
 	);
 }

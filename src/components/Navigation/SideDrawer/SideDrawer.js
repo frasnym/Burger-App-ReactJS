@@ -20,7 +20,7 @@ export default function SideDrawer(props) {
 					<Logo />
 				</div>
 				<nav>
-					<NavigationItems />
+					<NavigationItems isAuthenticated={props.isAuth} />
 				</nav>
 			</div>
 		</>
