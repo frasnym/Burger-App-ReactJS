@@ -31,7 +31,7 @@ export const auth = (email, password, isSignup) => {
 			.catch((error) => {
 				dispatch({
 					type: authActionTypes.AUTH_FAILURE,
-					error,
+					error: error.response.data.error,
 				});
 			});
 	};
