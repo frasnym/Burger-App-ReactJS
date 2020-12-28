@@ -1,6 +1,14 @@
 import { authActionTypes } from "./actionTypes";
 import axios from "axios";
 
+export const signout = () => {
+	return (dispatch) => {
+		dispatch({
+			type: authActionTypes.AUTH_SIGNOUT,
+		});
+	};
+};
+
 export const auth = (email, password, isSignup) => {
 	return (dispatch) => {
 		dispatch({
@@ -27,6 +35,10 @@ export const auth = (email, password, isSignup) => {
 					idToken: res.data.idToken,
 					userId: res.data.localId,
 				});
+
+				setTimeout(() => {
+					dispatch(signout());
+				}, res.data.expiresIn * 1000); // Milisecond to Second
 			})
 			.catch((error) => {
 				dispatch({
