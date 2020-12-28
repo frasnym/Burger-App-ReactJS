@@ -22,14 +22,13 @@ export const auth = (email, password, isSignup) => {
 		axios
 			.post(url, authData)
 			.then((res) => {
-				console.log(res);
 				dispatch({
 					type: authActionTypes.AUTH_SUCCESS,
-					authData: res.data,
+					idToken: res.data.idToken,
+					userId: res.data.localId,
 				});
 			})
 			.catch((error) => {
-				console.log(error);
 				dispatch({
 					type: authActionTypes.AUTH_FAILURE,
 					error,
