@@ -8,6 +8,7 @@ export default function NavigationItems() {
 		<ul className="NavigationItems">
 			<NavigationItem link="/">Burget Builder</NavigationItem>
 			<NavigationItem link="/orders">Orders</NavigationItem>
+			<NavigationItem link="/auth">Authenticate</NavigationItem>
 		</ul>
 	);
 }
