@@ -12,6 +12,12 @@ export const signout = () => {
 	};
 };
 
+export const signoutSucceed = () => {
+	return {
+		type: authActionTypes.AUTH_SIGNOUT,
+	};
+};
+
 export const authSuccess = (idToken, userId) => {
 	return {
 		type: authActionTypes.AUTH_SUCCESS,
@@ -21,10 +27,14 @@ export const authSuccess = (idToken, userId) => {
 };
 
 export const checkAuthTimeout = (expiresIn) => {
-	return (dispatch) => {
-		setTimeout(() => {
-			dispatch(signout());
-		}, expiresIn * 1000); // Milisecond to Second
+	// return (dispatch) => {
+	// 	setTimeout(() => {
+	// 		dispatch(signout());
+	// 	}, expiresIn * 1000); // Milisecond to Second
+	// };
+	return {
+		type: authActionTypes.AUTH_CHECK_TIMEOUT,
+		expiresIn,
 	};
 };
 
