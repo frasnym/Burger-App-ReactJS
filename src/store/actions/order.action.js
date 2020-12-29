@@ -52,7 +52,6 @@ export const fetchOrders = (token, userId) => {
 				});
 			})
 			.catch((error) => {
-				console.log({ error });
 				dispatch({
 					type: orderActionTypes.FETCH_ORDER_FAILURE,
 					error,
