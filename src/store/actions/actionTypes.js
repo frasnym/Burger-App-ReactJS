@@ -15,6 +15,7 @@ export const orderActionTypes = {
 };
 
 export const authActionTypes = {
+	AUTH_USER: "AUTH_USER",
 	AUTH_REQUEST: "AUTH_REQUEST",
 	AUTH_SUCCESS: "AUTH_SUCCESS",
 	AUTH_FAILURE: "AUTH_FAILURE",
