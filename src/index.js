@@ -10,14 +10,21 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import rootReducer from "./store/reducers/reducers";
 
+import createSagaMiddleware from "redux-saga";
+import { signoutSaga } from "./store/sagas/auth.saga";
+
+const sagaMiddleware = createSagaMiddleware();
+
 const composeEnhancers =
 	process.env.NODE_ENV === "development"
 		? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
 		: null || compose;
 const store = createStore(
 	rootReducer,
-	composeEnhancers(applyMiddleware(thunk))
+	composeEnhancers(applyMiddleware(thunk, sagaMiddleware))
 );
+
+sagaMiddleware.run(signoutSaga);
 
 const app = (
 	<Provider store={store}>
