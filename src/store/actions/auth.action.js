@@ -2,12 +2,13 @@ import { authActionTypes } from "./actionTypes";
 import axios from "axios";
 
 export const signout = () => {
-	localStorage.removeItem("token");
-	localStorage.removeItem("expirationDate");
-	localStorage.removeItem("userId");
+	// localStorage.removeItem("token");
+	// localStorage.removeItem("expirationDate");
+	// localStorage.removeItem("userId");
 
 	return {
-		type: authActionTypes.AUTH_SIGNOUT,
+		// type: authActionTypes.AUTH_SIGNOUT,
+		type: authActionTypes.AUTH_INITIATE_SIGNOUT,
 	};
 };
 
