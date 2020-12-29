@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { connect } from "react-redux";
+import { Route, Switch, withRouter } from "react-router-dom";
 
 import Layout from "./components/Layout/Layout";
 import Auth from "./containers/Auth/Auth";
@@ -7,17 +8,12 @@ import SignOut from "./containers/Auth/SignOut/SignOut";
 import BurgerBuilder from "./containers/BurgerBuilder/BurgerBuilder";
 import Checkout from "./containers/Checkout/Checkout";
 import Orders from "./containers/Orders/Orders";
+import { authCheckState } from "./store/actions/actions";
 
-export default class App extends Component {
-	state = {
-		show: true,
-	};
-
-	// componentDidMount() {
-	// 	setTimeout(() => {
-	// 		this.setState({ show: false });
-	// 	}, 5000);
-	// }
+class App extends Component {
+	componentDidMount() {
+		this.props.onTryAutoSignin();
+	}
 
 	render() {
 		return (
@@ -33,3 +29,11 @@ export default class App extends Component {
 		);
 	}
 }
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onTryAutoSignin: () => dispatch(authCheckState()),
+	};
+};
+
+export default withRouter(connect(null, mapDispatchToProps)(App));
