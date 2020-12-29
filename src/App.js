@@ -26,6 +26,7 @@ class App extends Component {
 		if (this.props.isAuthenticated) {
 			routes = (
 				<>
+					<Route path="/auth" component={Auth} />
 					<Route path="/signout" component={SignOut} />
 					<Route path="/checkout" component={Checkout} />
 					<Route path="/orders" component={Orders} />
@@ -42,8 +43,10 @@ class App extends Component {
 					<Route path="/orders" component={Orders} />
 					<Route path="/" exact component={BurgerBuilder} />
 				</Switch> */}
-				<Switch>{routes}</Switch>
-				<Redirect to="/" />
+				<Switch>
+					{routes}
+					<Redirect to="/" />
+				</Switch>
 			</Layout>
 		);
 	}
