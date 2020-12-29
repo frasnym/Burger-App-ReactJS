@@ -31,14 +31,15 @@ export const purchaseInit = () => {
 	};
 };
 
-export const fetchOrders = (token) => {
+export const fetchOrders = (token, userId) => {
 	return (dispatch) => {
 		dispatch({
 			type: orderActionTypes.FETCH_ORDER_REQUEST,
 		});
 
+		const queryParams = `?auth=${token}&orderBy="userId"&equalTo="${userId}"`;
 		axios
-			.get("/orders.json?auth=" + token)
+			.get("/orders.json" + queryParams)
 			.then((res) => {
 				const fetchedOrders = [];
 				for (const key in res.data) {
