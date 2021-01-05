@@ -41,15 +41,14 @@ const Auth = (props) => {
 			touched: false,
 		},
 	});
-
 	const [isSignUp, setIsSignUp] = useState(false);
 
+	const { buildingBurger, authRedirectPath, onSetAuthRedirectPath } = props;
 	useEffect(() => {
-		if (!props.buildingBurger && props.authRedirectPath !== "/") {
-			props.onSetAuthRedirectPath();
+		if (!buildingBurger && authRedirectPath !== "/") {
+			onSetAuthRedirectPath();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [authRedirectPath, buildingBurger, onSetAuthRedirectPath]);
 
 	const inputChangedHandler = (event, controlName) => {
 		const updatedControls = updateObject(authForm, {

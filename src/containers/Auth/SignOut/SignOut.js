@@ -5,10 +5,11 @@ import { Redirect } from "react-router-dom";
 import { signout } from "../../../store/actions/actions";
 
 const SignOut = (props) => {
+	const { onSignout } = props;
+
 	useEffect(() => {
-		props.onSignout();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		onSignout();
+	}, [onSignout]);
 
 	return <Redirect to="/" />;
 };
