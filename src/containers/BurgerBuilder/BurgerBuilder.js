@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import React, { useEffect, useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
@@ -13,7 +13,24 @@ import * as actions from "../../store/actions/actions";
 export const BurgerBuilder = (props) => {
 	const [purchasing, setPurchasing] = useState(false);
 
-	const { onInitIngredients } = props;
+	const ings = useSelector((state) => state.burgerBuilder.ingredients);
+	const price = useSelector((state) => state.burgerBuilder.totalPrice);
+	const error = useSelector((state) => state.burgerBuilder.error);
+	const isAuthenticated = useSelector((state) => state.auth.token !== null);
+
+	const dispatch = useDispatch();
+	const onIngredientAdded = (ingredientName) =>
+		dispatch(actions.addIngredient(ingredientName));
+	const onIngredientRemoved = (ingredientName) =>
+		dispatch(actions.removeIngredient(ingredientName));
+	const onInitIngredients = useCallback(
+		() => dispatch(actions.initIngredients()),
+		[dispatch]
+	);
+	const onInitPurchase = () => dispatch(actions.purchaseInit());
+	const onSetAuthRedirectPath = (path) =>
+		dispatch(actions.setAuthRedirectPath(path));
+
 	useEffect(() => {
 		onInitIngredients();
 	}, [onInitIngredients]);
@@ -31,10 +48,10 @@ export const BurgerBuilder = (props) => {
 	};
 
 	const purchaseHandler = () => {
-		if (props.isAuthenticated) {
+		if (isAuthenticated) {
 			setPurchasing(true);
 		} else {
-			props.onSetAuthRedirectPath("/checkout");
+			onSetAuthRedirectPath("/checkout");
 			props.history.push("/auth");
 		}
 	};
@@ -44,41 +61,41 @@ export const BurgerBuilder = (props) => {
 	};
 
 	const purchaseContinueHandler = () => {
-		props.onInitPurchase();
+		onInitPurchase();
 		props.history.push("/checkout");
 	};
 
 	const disabledInfo = {
-		...props.ings,
+		...ings,
 	};
 	for (const key in disabledInfo) {
 		disabledInfo[key] = disabledInfo[key] <= 0;
 	}
 
-	let burger = props.error ? <p>Ingredient can't be loaded</p> : <Spinner />;
+	let burger = error ? <p>Ingredient can't be loaded</p> : <Spinner />;
 	let orderSummary = null;
 
-	if (props.ings) {
+	if (ings) {
 		burger = (
 			<>
-				<Burger ingredients={props.ings} />
+				<Burger ingredients={ings} />
 				<BuildControls
-					ingredientAdded={props.onIngredientAdded}
-					ingredientRemoved={props.onIngredientRemoved}
+					ingredientAdded={onIngredientAdded}
+					ingredientRemoved={onIngredientRemoved}
 					disabled={disabledInfo}
-					purchasable={updatePurchaseState(props.ings)}
-					price={props.price}
-					isAuth={props.isAuthenticated}
+					purchasable={updatePurchaseState(ings)}
+					price={price}
+					isAuth={isAuthenticated}
 					ordered={purchaseHandler}
 				/>
 			</>
 		);
 		orderSummary = (
 			<OrderSummary
-				ingredients={props.ings}
+				ingredients={ings}
 				purchaseCancelled={purchaseCancelHandler}
 				purchaseCuntinued={purchaseContinueHandler}
-				price={props.price}
+				price={price}
 			/>
 		);
 	}
@@ -93,29 +110,4 @@ export const BurgerBuilder = (props) => {
 	);
 };
 
-const mapStateToProps = (state) => {
-	return {
-		ings: state.burgerBuilder.ingredients,
-		price: state.burgerBuilder.totalPrice,
-		error: state.burgerBuilder.error,
-		isAuthenticated: state.auth.token !== null,
-	};
-};
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		onIngredientAdded: (ingredientName) =>
-			dispatch(actions.addIngredient(ingredientName)),
-		onIngredientRemoved: (ingredientName) =>
-			dispatch(actions.removeIngredient(ingredientName)),
-		onInitIngredients: () => dispatch(actions.initIngredients()),
-		onInitPurchase: () => dispatch(actions.purchaseInit()),
-		onSetAuthRedirectPath: (path) =>
-			dispatch(actions.setAuthRedirectPath(path)),
-	};
-};
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(withErrorHandler(BurgerBuilder, axios));
+export default withErrorHandler(BurgerBuilder, axios);
