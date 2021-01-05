@@ -1,18 +1,17 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
 import { signout } from "../../../store/actions/actions";
 
-class SignOut extends Component {
-	componentDidMount() {
-		this.props.onSignout();
-	}
+const SignOut = (props) => {
+	useEffect(() => {
+		props.onSignout();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-	render() {
-		return <Redirect to="/" />;
-	}
-}
+	return <Redirect to="/" />;
+};
 
 const mapDispatchToProps = (dispatch) => {
 	return {
