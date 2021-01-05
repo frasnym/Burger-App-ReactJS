@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 
 import Order from "../../components/Order/Order";
@@ -7,27 +7,26 @@ import withErrorHandler from "../../components/HOC/withErrorHandler/withErrorHan
 import { fetchOrders } from "../../store/actions/actions";
 import Spinner from "../../components/UI/Spinner/Spinner";
 
-const Orders = class Orders extends Component {
-	componentDidMount() {
-		this.props.onFetchOrders(this.props.token, this.props.userId);
+const Orders = (props) => {
+	useEffect(() => {
+		props.onFetchOrders(props.token, props.userId);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	let orders = <Spinner />;
+	if (!props.loading) {
+		orders = props.orders.map((order) => {
+			return (
+				<Order
+					key={order.id}
+					ingredients={order.ingredients}
+					price={+order.price}
+				/>
+			);
+		});
 	}
 
-	render() {
-		let orders = <Spinner />;
-		if (!this.props.loading) {
-			orders = this.props.orders.map((order) => {
-				return (
-					<Order
-						key={order.id}
-						ingredients={order.ingredients}
-						price={+order.price}
-					/>
-				);
-			});
-		}
-
-		return <div>{orders}</div>;
-	}
+	return <div>{orders}</div>;
 };
 
 const mapStateToProps = (state) => {

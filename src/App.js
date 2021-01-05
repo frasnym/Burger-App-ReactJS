@@ -26,7 +26,7 @@ const App = (props) => {
 
 	let routes = (
 		<>
-			<Route path="/auth" render={() => <Auth />} />
+			<Route path="/auth" render={(props) => <Auth {...props} />} />
 			<Route path="/" exact component={BurgerBuilder} />
 		</>
 	);
@@ -34,10 +34,16 @@ const App = (props) => {
 	if (props.isAuthenticated) {
 		routes = (
 			<>
-				<Route path="/auth" render={() => <Auth />} />
+				<Route path="/auth" render={(props) => <Auth {...props} />} />
 				<Route path="/signout" component={SignOut} />
-				<Route path="/checkout" render={() => <Checkout />} />
-				<Route path="/orders" render={() => <Orders />} />
+				<Route
+					path="/checkout"
+					render={(props) => <Checkout {...props} />}
+				/>
+				<Route
+					path="/orders"
+					render={(props) => <Orders {...props} />}
+				/>
 				<Route path="/" exact component={BurgerBuilder} />
 			</>
 		);
